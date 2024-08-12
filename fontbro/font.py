@@ -14,6 +14,7 @@ from typing import Any, Generator, IO
 import fsutil
 import ots
 from fontTools import unicodedata
+from fontTools.pens.boundsPen import BoundsPen
 from fontTools.pens.svgPathPen import SVGPathPen
 from fontTools.subset import Options as SubsetterOptions
 from fontTools.subset import Subsetter
@@ -1460,6 +1461,34 @@ class Font:
         weight = self._WEIGHTS_BY_VALUE.get(closest_weight_option_value, {}).copy()
         weight["value"] = weight_value
         return weight
+
+    def get_glyph_proportions(
+        self,
+        glpyhs="oO"
+    ) -> float | None:
+        """
+        Gets the proportion of the glyph in the font. (Based on the bounding box)
+
+        :param glpyhs: The first available glyph will be checked.
+        :type glpyhs: str
+        :returns: The proportion of the glyph.
+        :rtype: float or None
+        """
+        font = self.get_ttfont()
+        glyphset = font.getGlyphSet()
+        for glyph_name in glpyhs:
+            glyph_to_check = glyphset.get(glyph_name)
+            if glyph_to_check:
+                continue
+        if not glyph_to_check:
+            return None
+
+        bp = BoundsPen(glyphset)
+        glyph_to_check.draw(bp)
+
+        x = bp.bounds[2] - bp.bounds[0]
+        y = bp.bounds[3] - bp.bounds[1]
+        return x / y
 
     def get_width(
         self,
