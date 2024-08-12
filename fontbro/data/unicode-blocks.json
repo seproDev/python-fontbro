@@ -1280,6 +1280,10 @@
         "name": "CJK Unified Ideographs Extension F"
     },
     {
+        "characters_total": 624,
+        "name": "CJK Unified Ideographs Extension I"
+    },
+    {
         "characters_total": 544,
         "name": "CJK Compatibility Ideographs Supplement"
     },
