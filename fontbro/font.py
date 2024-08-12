@@ -4,6 +4,7 @@ import copy
 import math
 import os
 import re
+import string
 import sys
 import tempfile
 from collections import Counter
@@ -1578,6 +1579,18 @@ class Font:
         same_width_count = widths_counter.most_common(1)[0][1]
         same_width_amount = same_width_count / self.get_glyphs_count()
         return same_width_amount >= threshold
+
+    def is_all_caps(self):
+        font = self.get_ttfont()
+        glyf_table = font["glyf"]
+        def normalize_glyphs(glyph_name):
+            coordinates = glyf_table[glyph_name].getCoordinates(glyf_table)[0]
+            return [(x[0] - coordinates[0][0], x[1] - coordinates[0][1]) for x in coordinates]
+        for letter in string.ascii_lowercase:
+            # Still has false negatives when the path is slightly different
+            if normalize_glyphs(font, letter) != normalize_glyphs(font, letter.upper()):
+                return False
+        return True
 
     def is_static(
         self,
