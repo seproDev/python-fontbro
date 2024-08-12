@@ -10,8 +10,7 @@ from collections import Counter
 from curses import ascii
 from io import BytesIO
 from pathlib import Path
-from typing import Any, Generator
-from typing.io import IO
+from typing import Any, Generator, IO
 import fsutil
 import ots
 from fontTools import unicodedata
