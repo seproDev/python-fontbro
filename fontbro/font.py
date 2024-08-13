@@ -2162,7 +2162,10 @@ class Font:
 
         x = bp.bounds[2] - bp.bounds[0]
         y = bp.bounds[3] - bp.bounds[1]
-        return x / y
+        proportions = x / y
+        if proportions <= 0:
+            return None
+        return 10 if proportions >= 10 else proportions
 
     def get_glyph_weight(
         self,
@@ -2194,8 +2197,10 @@ class Font:
 
         ap = AreaPen(glyphset)
         glyph_to_check.draw(ap)
-        area = abs(ap.value)
-        return area / full_area
+        weight = abs(ap.value) / full_area
+        if weight <= 0:
+            return None
+        return 1 if weight >= 1 else weight
 
     def get_width(
         self,
